@@ -9,4 +9,3 @@ imageio>=2.19.0
 opencv-python>=4.6.0
 omegaconf>=2.2.0
 pytest>=7.0.0
-pandas>=2.0.0

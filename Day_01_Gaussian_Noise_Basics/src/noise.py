@@ -31,7 +31,7 @@ def add_gaussian_noise(
         return x.clone()
     
     # Generate noise with same shape as input
-    noise = torch.randn_like(x) * sigma
+    noise = torch.randn_like(x, generator=generator) * sigma
     noisy_x = x + noise
     
     # Apply clipping if specified

@@ -1,0 +1,111 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Denoising Autoencoder Limitations Analysis</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 40px; }
+                .header { background-color: #f0f0f0; padding: 20px; border-radius: 5px; }
+                .section { margin: 20px 0; padding: 15px; border-left: 4px solid #007acc; }
+                .metric { margin: 10px 0; }
+                .score { font-weight: bold; color: #d63031; }
+                .good { color: #00b894; }
+                .warning { color: #fdcb6e; }
+                .bad { color: #d63031; }
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>Denoising Autoencoder Limitations Analysis</h1>
+                <p>Analysis of DAE limitations compared to generative models</p>
+            </div>
+            
+            <div class="section">
+                <h2>Executive Summary</h2>
+                <p>Denoising Autoencoders (DAEs) are reconstruction-based models that learn to map noisy inputs to clean outputs. 
+                Unlike generative models, DAEs have fundamental limitations in diversity and detail preservation.</p>
+                
+                <table>
+                    <tr>
+                        <th>Limitation</th>
+                        <th>Score (0-1, higher = worse)</th>
+                        <th>Interpretation</th>
+                    </tr>
+                    <tr>
+                        <td>Over-smoothing</td>
+                        <td class="score">0.280</td>
+                        <td>Tendency to blur fine details</td>
+                    </tr>
+                    <tr>
+                        <td>Diversity Collapse</td>
+                        <td class="score">0.968</td>
+                        <td>Similar outputs from different noisy inputs</td>
+                    </tr>
+                    <tr>
+                        <td>High-Freq Loss</td>
+                        <td class="score">0.504</td>
+                        <td>Loss of high-frequency image content</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Overall</strong></td>
+                        <td class="score"><strong>0.584</strong></td>
+                        <td><strong>Combined limitation severity</strong></td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>1. Over-Smoothing Analysis</h2>
+                <p>DAEs tend to over-smooth images by reducing high-frequency content.</p>
+                <div class="metric">High-frequency energy ratio: <span class="score">0.720</span></div>
+                <div class="metric">Gradient magnitude ratio: <span class="score">0.906</span></div>
+                <p><strong>Interpretation:</strong> Values < 1.0 indicate smoothing (loss of detail). 
+                Typical values for good reconstruction: 0.7-0.9.</p>
+            </div>
+            
+            <div class="section">
+                <h2>2. Diversity Collapse Analysis</h2>
+                <p>DAEs produce similar outputs when given different noisy versions of the same image.</p>
+                <div class="metric">Mean pairwise distance: <span class="score">0.002860</span></div>
+                <div class="metric">Diversity score: <span class="score">0.032</span></div>
+                <p><strong>Interpretation:</strong> Low diversity scores indicate mode collapse. 
+                Generative models would show higher diversity.</p>
+            </div>
+            
+            <div class="section">
+                <h2>3. Key Limitations vs Generative Models</h2>
+                <ul>
+                    <li><strong>No Distribution Modeling:</strong> DAEs learn mappings, not data distributions</li>
+                    <li><strong>Limited Diversity:</strong> Cannot generate novel variations</li>
+                    <li><strong>Over-smoothing:</strong> Tend to average out fine details</li>
+                    <li><strong>No Sampling:</strong> Cannot generate new samples from noise</li>
+                    <li><strong>Mode Averaging:</strong> May blend different modes rather than choosing</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>4. When DAEs Fall Short</h2>
+                <ul>
+                    <li>High noise levels (σ > 0.5)</li>
+                    <li>Images with fine textures or details</li>
+                    <li>Multi-modal reconstruction scenarios</li>
+                    <li>Creative/generative applications</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>5. Conclusion</h2>
+                <p>While DAEs are effective for denoising tasks, they have fundamental limitations compared to 
+                generative models like diffusion models. They excel at reconstruction but cannot model the 
+                underlying data distribution, leading to over-smoothing and lack of diversity.</p>
+                
+                <p><strong>Next Steps:</strong> Understanding these limitations motivates the study of generative 
+                models (VAEs, GANs, Diffusion Models) that can model data distributions and generate diverse, 
+                high-quality samples.</p>
+            </div>
+        </body>
+        </html>
+        

@@ -3,8 +3,7 @@ Evaluation metrics for Day 1: Gaussian Noise Basics
 """
 
 import math
-from typing import Optional, Union
-from pathlib import Path
+from typing import Union
 
 import numpy as np
 import torch

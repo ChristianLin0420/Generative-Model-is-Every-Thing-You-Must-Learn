@@ -150,7 +150,7 @@ def make_animation(
             noisy_batch,
             nrow=grid_size[1],
             normalize=False,
-            value_range=(0, 1),
+            range=(0, 1),
             pad_value=1.0
         )
         

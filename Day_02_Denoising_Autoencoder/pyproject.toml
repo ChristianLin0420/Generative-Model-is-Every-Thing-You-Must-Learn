@@ -1,0 +1,30 @@
+[project]
+name = "day02-denoising-autoencoder"
+version = "0.1.0"
+description = "Day 2: Denoising Autoencoder - 30-Day Diffusion Challenge"
+requires-python = ">=3.8"
+
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+
+[tool.ruff]
+line-length = 88
+select = ["E", "W", "F", "I"]
+ignore = ["E501"]  # Line too long (handled by black)

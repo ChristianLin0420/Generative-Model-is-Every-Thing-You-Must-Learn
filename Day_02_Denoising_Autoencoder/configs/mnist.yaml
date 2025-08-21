@@ -1,0 +1,51 @@
+seed: 123
+device: "cuda:0"        # or "cuda:0"
+
+data:
+  dataset: "mnist"
+  root: "./data"
+  batch_size: 1024
+  num_workers: 0               # Set to 0 for CPU to avoid multiprocessing issues
+  normalize: "zero_one"    # zero_one | minus_one_one
+  
+model:
+  name: "conv"             # unet | conv (using conv for simplicity and reliability)
+  in_ch: 1                 # 1 for MNIST
+  out_ch: 1
+  base_ch: 64
+  num_downs: 3             # UNet depth
+  dropout: 0.1
+  norm_type: "group"       # group | instance | batch
+
+train:
+  epochs: 20
+  lr: 2e-4
+  weight_decay: 1e-4
+  opt: "adamw"             # adamw | adam | sgd
+  loss: "l2"               # l1 | l2 | charbonnier
+  grad_clip: 1.0
+  amp: false               # Automatic Mixed Precision (disable for CPU)
+  ema: true                # Exponential Moving Average
+  ema_decay: 0.999
+  scheduler: "cosine"      # cosine | step | none
+  warmup_epochs: 1
+
+noise:
+  train_sigmas: [0.1, 0.2, 0.3, 0.5]
+  test_sigmas: [0.1, 0.3, 0.7, 1.0]   # Include mismatch for robustness testing
+  schedule: "linear"                   # linear | cosine
+  clip_range: [0, 1]                  # Clipping after noise addition
+
+log:
+  out_dir: "./outputs"
+  save_every: 5                       # Save checkpoint every N epochs
+  log_every: 100                      # Log training stats every N steps
+  eval_every: 1                       # Evaluate every N epochs
+  viz_every: 5                        # Generate visualizations every N epochs
+  use_wandb: false                    # Enable Weights & Biases logging
+  project_name: "day02_dae"
+
+eval:
+  num_viz_images: 16                  # Number of images for visualization
+  compute_fid: false                  # Compute FID score (expensive)
+  save_recons: true                   # Save reconstruction grids
