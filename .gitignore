@@ -205,3 +205,11 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Model checkpoints and large files
+*.pth
+*.ckpt
+*.model
+*.weights
+ckpts/
+outputs/ckpts/
