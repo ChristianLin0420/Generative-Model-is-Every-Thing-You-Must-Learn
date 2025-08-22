@@ -1,0 +1,33 @@
+seed: 1337
+device: "cuda:0"
+
+data:
+  dataset: "mnist"
+  root: "./data"
+  batch_size: 128
+  num_workers: 4
+  normalize: "zero_one"  # or "minus_one_one"
+
+model:
+  name: "vae_conv"  # vae_conv | vae_resnet | vae_mlp
+  in_ch: 1          # 1 for MNIST, 3 for CIFAR
+  latent_dim: 32    # 2 for toy scatter/traverse; 32/64 for quality
+  base_ch: 64
+
+train:
+  epochs: 40
+  lr: 3e-4
+  opt: "adamw"
+  recon_loss: "bce"     # bce | l2 | charbonnier
+  beta: 1.0             # static beta for β-VAE
+  kl_schedule: "linear" # none | linear | cyclical
+  kl_warmup_epochs: 10
+  amp: true
+  ema: false
+
+eval:
+  iwae_samples: 64      # IWAE K for NLL estimate
+
+log:
+  out_dir: "./outputs"
+  save_every: 1

@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vae-refresher"
+version = "0.1.0"
+description = "Day 3: VAE Refresher - Comprehensive VAE implementation with generation and analysis"
+requires-python = ">=3.8"
+dependencies = [
+    "torch>=1.11.0",
+    "torchvision>=0.12.0",
+    "numpy>=1.21.0",
+    "tqdm>=4.62.0",
+    "matplotlib>=3.5.0",
+    "Pillow>=8.3.0",
+    "scikit-image>=0.18.0",
+    "lpips>=0.1.4",
+    "imageio>=2.19.0",
+    "rich>=12.0.0",
+    "omegaconf>=2.2.0",
+    "PyYAML>=6.0.0",
+    "tensorboard>=2.8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=22.0.0",
+    "flake8>=4.0.0",
+    "isort>=5.10.0",
+]
+
+[tool.setuptools]
+packages = ["src"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.isort]
+profile = "black"
+line_length = 88
