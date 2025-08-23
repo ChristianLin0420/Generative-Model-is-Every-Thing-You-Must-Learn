@@ -1,0 +1,17 @@
+seed: 42
+device: "cuda:0"
+
+data:
+  dataset: "cifar10"
+  root: "./data"
+  batch_size: 64
+  num_workers: 4
+  normalize: "minus_one_one"
+
+diffusion:
+  T: 1000
+  schedule: "cosine"     # linear | cosine | sigmoid
+  timesteps_to_show: [0, 10, 50, 100, 250, 500, 750, 999]
+
+log:
+  out_dir: "./outputs"

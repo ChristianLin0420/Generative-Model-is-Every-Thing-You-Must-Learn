@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# One-liner script to generate all figures for CIFAR-10 dataset
+
+echo "Running all forward diffusion experiments for CIFAR-10..."
+
+# Ensure we're in the right directory
+cd "$(dirname "$0")/.."
+
+# Run all experiments using the CLI
+python -m src.cli run.all --config configs/cifar10.yaml
+
+echo "CIFAR-10 experiments completed!"
+echo "Check outputs/ directory for results:"
+echo "  - outputs/grids/cifar10_traj_grid.png"
+echo "  - outputs/animations/sample_000.gif"
+echo "  - outputs/plots/beta_alpha_snr.png"
+echo "  - outputs/plots/snr_analysis.png"
+echo "  - outputs/plots/hist_t_cosine.png"
+echo "  - outputs/plots/mse_kl_curves.png"
+echo "  - outputs/logs/forward_stats.csv"
