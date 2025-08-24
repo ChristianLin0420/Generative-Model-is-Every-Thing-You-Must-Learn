@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "day05-reverse-process-intuition"
+version = "0.1.0"
+description = "Day 5: Reverse Process Intuition - DDPM Implementation"
+authors = [{name = "Chris Lin"}]
+requires-python = ">=3.8"
+dependencies = [
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "numpy>=1.21.0",
+    "tqdm>=4.64.0",
+    "matplotlib>=3.5.0",
+    "Pillow>=9.0.0",
+    "imageio>=2.22.0",
+    "imageio-ffmpeg>=0.4.7",
+    "rich>=12.0.0",
+    "omegaconf>=2.3.0",
+    "pyyaml>=6.0",
+    "einops>=0.6.0",
+    "scikit-image>=0.19.0",
+    "tensorboard>=2.10.0",
+]
+
+[project.scripts]
+day05-cli = "src.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.isort]
+profile = "black"

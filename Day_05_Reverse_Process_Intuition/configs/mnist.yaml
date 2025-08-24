@@ -1,0 +1,79 @@
+# MNIST Configuration for DDPM Training
+
+# Dataset
+dataset:
+  name: "mnist"
+  root: "data"
+  download: true
+  image_size: 32  # Resize MNIST to 32x32
+  channels: 1
+
+# Model
+model:
+  type: "unet_tiny"
+  in_channels: 1
+  out_channels: 1  # Predict noise epsilon
+  model_channels: 16
+  num_res_blocks: 1
+  attention_resolutions: []  # No attention for now
+  channel_mult: [1]  # No downsampling to avoid skip connection issues
+  num_heads: 4
+  use_scale_shift_norm: true
+  dropout: 0.0
+  time_embed_dim: 64
+
+# DDPM Schedule
+ddpm:
+  num_timesteps: 100  # T = 100 for faster training
+  beta_schedule: "linear"
+  beta_start: 0.0001
+  beta_end: 0.02
+  prediction_type: "epsilon"  # predict noise ε
+
+# Training
+training:
+  epochs: 20
+  batch_size: 128
+  learning_rate: 2e-4
+  weight_decay: 0.0
+  ema_decay: 0.9999
+  gradient_clip_val: 1.0
+  mixed_precision: true
+  
+  # Optimizer
+  optimizer: "adamw"
+  lr_scheduler: "cosine"
+  warmup_steps: 500
+  
+  # Logging
+  log_every: 100
+  save_every: 5
+  sample_every: 2  # Sample every 2 epochs
+  num_sample_images: 16
+
+# Sampling
+sampling:
+  method: "ddpm"  # ancestral sampling
+  num_steps: 100  # Use all timesteps
+  eta: 1.0  # Full noise for DDPM
+  guidance_scale: 1.0  # No guidance
+  batch_size: 64
+
+# Evaluation
+eval:
+  num_samples: 100
+  metrics: ["psnr", "ssim"]
+  timesteps_to_eval: [10, 25, 50, 75, 99]
+
+# Paths
+paths:
+  checkpoint_dir: "outputs/ckpts"
+  log_dir: "outputs/logs"
+  sample_dir: "outputs/samples"
+  grid_dir: "outputs/grids"
+  animation_dir: "outputs/animations"
+  report_dir: "outputs/reports"
+
+# Device
+device: "auto"  # auto-detect GPU
+seed: 42

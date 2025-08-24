@@ -1,0 +1,79 @@
+# CIFAR-10 Configuration for DDPM Training
+
+# Dataset
+dataset:
+  name: "cifar10"
+  root: "data"
+  download: true
+  image_size: 32
+  channels: 3
+
+# Model
+model:
+  type: "unet_tiny"
+  in_channels: 3
+  out_channels: 3  # Predict noise epsilon
+  model_channels: 128
+  num_res_blocks: 2
+  attention_resolutions: [16]  # Only at 16x16
+  channel_mult: [1, 2, 2, 2]
+  num_heads: 4
+  use_scale_shift_norm: true
+  dropout: 0.1
+  time_embed_dim: 512
+
+# DDPM Schedule
+ddpm:
+  num_timesteps: 200  # T = 200 for better quality
+  beta_schedule: "cosine"  # Better for color images
+  beta_start: 0.0001
+  beta_end: 0.02
+  prediction_type: "epsilon"  # predict noise ε
+
+# Training
+training:
+  epochs: 50
+  batch_size: 64  # Smaller batch for 3-channel images
+  learning_rate: 1e-4
+  weight_decay: 0.01
+  ema_decay: 0.9999
+  gradient_clip_val: 1.0
+  mixed_precision: true
+  
+  # Optimizer
+  optimizer: "adamw"
+  lr_scheduler: "cosine"
+  warmup_steps: 1000
+  
+  # Logging
+  log_every: 100
+  save_every: 10
+  sample_every: 5  # Sample every 5 epochs
+  num_sample_images: 16
+
+# Sampling
+sampling:
+  method: "ddpm"  # ancestral sampling
+  num_steps: 200  # Use all timesteps
+  eta: 1.0  # Full noise for DDPM
+  guidance_scale: 1.0  # No guidance
+  batch_size: 36
+
+# Evaluation
+eval:
+  num_samples: 100
+  metrics: ["psnr", "ssim", "lpips"]
+  timesteps_to_eval: [20, 50, 100, 150, 199]
+
+# Paths
+paths:
+  checkpoint_dir: "outputs/ckpts"
+  log_dir: "outputs/logs"
+  sample_dir: "outputs/samples"
+  grid_dir: "outputs/grids"
+  animation_dir: "outputs/animations"
+  report_dir: "outputs/reports"
+
+# Device
+device: "auto"  # auto-detect GPU
+seed: 42
