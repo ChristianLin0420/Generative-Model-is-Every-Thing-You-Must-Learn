@@ -1,0 +1,166 @@
+# DDPM Configuration for CIFAR-10
+# Day 6: Full Training Loop Implementation
+
+# Dataset configuration
+dataset:
+  name: "cifar10"
+  data_dir: "./data"
+  image_size: 32  # Native CIFAR-10 size
+  conditional: false  # Set to true for class-conditional generation
+  label_dropout: 0.1  # For classifier-free guidance (if conditional)
+  num_workers: 4
+  pin_memory: true
+
+# Model configuration
+model:
+  type: "unet_small"
+  in_channels: 3  # CIFAR-10 is RGB
+  out_channels: 3
+  model_channels: 64  # Larger base channels for CIFAR-10
+  channel_mult: [1, 2, 4, 4]  # Channel multipliers: [64, 128, 256, 256]
+  num_res_blocks: 2  # Residual blocks per level
+  attention_resolutions: [16]  # Apply attention at 16x16 resolution
+  dropout: 0.1
+  time_embed_dim: 256  # Larger time embedding
+  use_attention: true
+  num_heads: 8  # More attention heads
+
+# DDPM schedule configuration
+schedules:
+  num_timesteps: 1000
+  schedule_type: "cosine"  # Cosine schedule often better for CIFAR-10
+  beta_start: 0.0001
+  beta_end: 0.02
+  cosine_s: 0.008
+
+# Loss configuration
+loss:
+  type: "simple"  # "simple" or "vlb"
+  parameterization: "eps"  # "eps", "x0", or "v"
+  loss_type: "l2"  # "l1", "l2", or "huber"
+  lambda_simple: 1.0
+  lambda_vlb: 0.0
+
+# Training configuration
+training:
+  num_epochs: 500  # More epochs for CIFAR-10
+  batch_size: 64   # Smaller batch size due to larger model
+  learning_rate: 1e-4  # Lower learning rate
+  weight_decay: 0.01   # Some weight decay for regularization
+  grad_clip_norm: 1.0
+  
+  # Mixed precision training
+  use_amp: true
+  
+  # Exponential Moving Average
+  ema:
+    enabled: true
+    decay: 0.9999  # Slightly higher decay for longer training
+    
+  # Optimizer configuration
+  optimizer:
+    type: "adamw"
+    betas: [0.9, 0.999]
+    eps: 1e-8
+    
+  # Learning rate scheduler
+  scheduler:
+    type: "cosine"
+    eta_min: 1e-7
+    
+  # Periodic sampling during training
+  sampling:
+    every_epochs: 20  # Sample every 20 epochs (less frequent due to cost)
+    num_images: 64
+    ddim_steps: 50
+    
+# Sampling configuration
+sampling:
+  method: "ddim"  # DDIM preferred for CIFAR-10 due to speed
+  num_steps: 100  # More steps for better quality
+  eta: 0.0
+  clip_denoised: true
+  
+# Evaluation configuration
+evaluation:
+  num_samples: 5000    # More samples for robust metrics
+  batch_size: 32       # Smaller batch for memory
+  use_ema: true
+  use_lpips: true      # Important for CIFAR-10
+  use_fid: true
+  
+  # Sampling methods to evaluate
+  methods:
+    - method: "ddim"
+      steps: [20, 50, 100, 250]
+    - method: "ddpm"
+      steps: [1000]
+
+# Output directories
+output:
+  base_dir: "./outputs"
+  checkpoint_dir: "ckpts"
+  log_dir: "logs"
+  sample_dir: "grids"
+  animation_dir: "animations"
+  curve_dir: "curves"
+  report_dir: "reports"
+
+# Reproducibility
+seed: 42
+deterministic: true
+
+# Logging configuration
+logging:
+  log_every: 100
+  save_every: 2000    # Less frequent saves to reduce I/O
+  
+# Hardware configuration
+device: "auto"
+mixed_precision: true
+
+# Advanced training options (optional)
+advanced:
+  # Gradient accumulation for effective larger batch sizes
+  gradient_accumulation_steps: 1
+  
+  # Early stopping
+  early_stopping:
+    enabled: false
+    patience: 20
+    min_delta: 0.001
+    
+  # Model checkpointing
+  checkpoint:
+    save_best: true
+    save_last: true
+    monitor: "val_loss"
+    
+# Data augmentation (already included in dataset transforms)
+augmentation:
+  horizontal_flip: true
+  rotation: 10  # degrees
+  color_jitter:
+    brightness: 0.1
+    contrast: 0.1
+    saturation: 0.1
+    hue: 0.1
+
+# Experiment metadata
+experiment:
+  name: "cifar10_ddpm_cosine"
+  description: "DDPM training on CIFAR-10 with cosine schedule"
+  tags: ["ddpm", "cifar10", "cosine-schedule"]
+  notes: |
+    DDPM configuration optimized for CIFAR-10:
+    - 32x32 RGB images
+    - Cosine noise schedule for better performance
+    - Larger model (64 base channels)
+    - More training epochs
+    - LPIPS evaluation enabled
+    - EMA with higher decay rate
+    
+    Expected results:
+    - FID < 10 after full training
+    - Good sample quality and diversity
+    - Training time: ~12-24 hours on modern GPU

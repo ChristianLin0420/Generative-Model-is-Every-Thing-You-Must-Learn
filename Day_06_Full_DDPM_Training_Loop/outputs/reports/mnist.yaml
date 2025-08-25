@@ -1,0 +1,133 @@
+# DDPM Configuration for MNIST
+# Day 6: Full Training Loop Implementation
+
+# Dataset configuration
+dataset:
+  name: "mnist"
+  data_dir: "./data"
+  image_size: 32  # Resize to 32x32 for consistency
+  conditional: false  # Set to true for class-conditional generation
+  label_dropout: 0.1  # For classifier-free guidance (if conditional)
+  num_workers: 4
+  pin_memory: true
+
+# Model configuration
+model:
+  type: "unet_small"
+  in_channels: 1  # MNIST is grayscale
+  out_channels: 1
+  model_channels: 32  # Base number of channels
+  channel_mult: [1, 2, 4]  # Channel multipliers: [32, 64, 128] - simplified
+  num_res_blocks: 2  # Residual blocks per level
+  attention_resolutions: [16]  # Apply attention at 16x16 resolution
+  dropout: 0.1
+  time_embed_dim: 128
+  use_attention: true
+  num_heads: 4
+
+# DDPM schedule configuration
+schedules:
+  num_timesteps: 1000
+  schedule_type: "linear"  # "linear" or "cosine"
+  beta_start: 0.0001
+  beta_end: 0.02
+  cosine_s: 0.008  # Only used for cosine schedule
+
+# Loss configuration
+loss:
+  type: "simple"  # "simple" or "vlb"
+  parameterization: "eps"  # "eps", "x0", or "v"
+  loss_type: "l2"  # "l1", "l2", or "huber"
+  lambda_simple: 1.0
+  lambda_vlb: 0.0
+
+# Training configuration
+training:
+  num_epochs: 200
+  batch_size: 128
+  learning_rate: 2e-4
+  weight_decay: 0.0
+  grad_clip_norm: 1.0
+  
+  # Mixed precision training
+  use_amp: true
+  
+  # Exponential Moving Average
+  ema:
+    enabled: true
+    decay: 0.999
+    
+  # Optimizer configuration
+  optimizer:
+    type: "adamw"  # "adamw", "adam", or "sgd"
+    betas: [0.9, 0.999]
+    eps: 1e-8
+    
+  # Learning rate scheduler
+  scheduler:
+    type: "cosine"  # "cosine", "step", "exponential", "multistep", or "none"
+    eta_min: 1e-6
+    
+  # Periodic sampling during training
+  sampling:
+    every_epochs: 10  # Sample every N epochs
+    num_images: 64   # Number of images to generate
+    ddim_steps: 50   # DDIM steps for fast sampling
+    
+# Sampling configuration
+sampling:
+  method: "ddim"  # "ddpm" or "ddim"
+  num_steps: 50   # For DDIM
+  eta: 0.0        # DDIM stochasticity (0=deterministic, 1=DDPM-like)
+  clip_denoised: true
+  
+# Evaluation configuration
+evaluation:
+  num_samples: 1000    # Number of samples for evaluation
+  batch_size: 64       # Evaluation batch size
+  use_ema: true        # Use EMA weights for evaluation
+  use_lpips: true      # Compute LPIPS metrics
+  use_fid: true        # Compute FID-proxy metrics
+  
+  # Sampling methods to evaluate
+  methods:
+    - method: "ddim"
+      steps: [10, 20, 50, 100]
+    - method: "ddpm"
+      steps: [1000]  # Full steps only for DDPM
+
+# Output directories
+output:
+  base_dir: "./outputs"
+  checkpoint_dir: "ckpts"
+  log_dir: "logs"
+  sample_dir: "grids"
+  animation_dir: "animations"
+  curve_dir: "curves"
+  report_dir: "reports"
+
+# Reproducibility
+seed: 42
+deterministic: true
+
+# Logging configuration
+logging:
+  log_every: 100      # Log metrics every N steps
+  save_every: 1000    # Save checkpoint every N steps
+  
+# Hardware configuration
+device: "auto"  # "auto", "cpu", "cuda", or "mps"
+mixed_precision: true
+
+# Experiment metadata
+experiment:
+  name: "mnist_ddpm_baseline"
+  description: "DDPM training on MNIST with standard configuration"
+  tags: ["ddpm", "mnist", "baseline"]
+  notes: |
+    Baseline DDPM configuration for MNIST dataset.
+    - 32x32 images
+    - 1000 timesteps linear schedule
+    - UNet with attention at 16x16
+    - EMA enabled
+    - Mixed precision training
