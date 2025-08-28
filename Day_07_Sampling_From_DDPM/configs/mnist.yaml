@@ -1,0 +1,31 @@
+seed: 7
+device: "cuda:0"
+
+data:
+  dataset: "mnist"
+  root: "../Day_06_Full_DDPM_Training_Loop/data"
+
+diffusion:
+  T: 1000
+  schedule: "cosine"  # keep identical to Day 6
+  posterior_var: "posterior"  # beta | posterior (DDPM paper option)
+
+model:
+  in_ch: 1  # 1 for MNIST
+  base_ch: 32
+  ch_mult: [1, 2, 4]
+  time_embed_dim: 128
+
+checkpoints:
+  dir: "../Day_06_Full_DDPM_Training_Loop/outputs/ckpts"
+  use_ema: true
+  list: ["checkpoint_epoch_0010.pt", "checkpoint_epoch_0030.pt", "checkpoint_epoch_0060.pt", "ema.pt"]  # any subset
+
+sample:
+  num_images: 64
+  ddim_steps: 50  # optional fast preview
+  save_grid_path: "./outputs/grids/samples_ep{E}.png"
+  save_anim_path: "./outputs/animations/traj_ep{E}.gif"
+
+log:
+  out_dir: "./outputs"
