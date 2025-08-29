@@ -1,0 +1,7 @@
+_base_: base.yaml
+
+diffusion:
+  schedule: "cosine"
+
+log:
+  run_name: "cosine"

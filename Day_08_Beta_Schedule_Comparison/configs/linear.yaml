@@ -1,0 +1,7 @@
+_base_: base.yaml
+
+diffusion:
+  schedule: "linear"
+
+log:
+  run_name: "linear"

@@ -1,0 +1,7 @@
+_base_: base.yaml
+
+diffusion:
+  schedule: "quadratic"
+
+log:
+  run_name: "quadratic"

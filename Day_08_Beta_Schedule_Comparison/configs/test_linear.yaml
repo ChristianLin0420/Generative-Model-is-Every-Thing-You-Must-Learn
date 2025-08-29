@@ -1,0 +1,13 @@
+_base_: "base.yaml"
+
+diffusion:
+  schedule: "linear"
+
+train:
+  epochs: 3  # Quick test with just 3 epochs
+  save_every: 1
+  sample_every: 2
+
+log:
+  run_name: "test_linear"
+  log_every: 50

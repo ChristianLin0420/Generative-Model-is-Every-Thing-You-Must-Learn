@@ -1,0 +1,49 @@
+seed: 808
+device: "cuda:0"
+
+data:
+  dataset: "mnist"
+  root: "./data"
+  batch_size: 128
+  num_workers: 4
+  normalize: "minus_one_one"
+
+diffusion:
+  T: 1000
+  schedule: "cosine"  # overridden per schedule
+  beta_min: 1e-4
+  beta_max: 0.02
+  cosine_s: 0.008
+
+model:
+  in_ch: 1
+  base_ch: 64
+  ch_mult: [1, 2, 2]
+  time_embed_dim: 256
+  dropout: 0.1
+  num_res_blocks: 2
+  attn_resolutions: [16]
+
+train:
+  epochs: 40
+  lr: 2e-4
+  opt: "adamw"
+  wd: 0.02
+  amp: true
+  ema: true
+  ema_decay: 0.999
+  grad_clip: 1.0
+  save_every: 10
+  sample_every: 5
+
+sample:
+  num_images: 64
+  ddim_steps: 50
+  eta: 0.0
+  guidance_scale: 1.0
+
+log:
+  out_root: "./outputs"
+  run_name: "base"
+  log_every: 100
+  tensorboard: true
